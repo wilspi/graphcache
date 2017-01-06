@@ -1,4 +1,4 @@
-from model.node import Node
+from node import Node
 
 """
 Grapheap class

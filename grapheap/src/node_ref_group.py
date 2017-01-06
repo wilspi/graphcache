@@ -1,6 +1,6 @@
 
 from bisect import bisect_right
-from util.cache import Cache
+from .. utils.cache import Cache
 
 """
 NodeRefGroup class
