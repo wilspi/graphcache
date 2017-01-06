@@ -1,4 +1,5 @@
-Grapheap Its a read optimised graph (inspired by heap) implemented in python and memcache
+Grapheap 
+Its a read optimised graph (inspired by heap) implemented in python and memcache
 Every node has list of incoming nodes and outgoing nodes which are sorted by various keys, which you define while creating the grapheap. This makes the read optimised while traversing.
 Each node can have n list of key-value pairs but it must have the optimisation keys, keys on which sorting is to be enabled for the Grapheap
 
