@@ -29,6 +29,13 @@ brew install memcached
 Basic Use
 ---------
 
+Run Memcached service:    
+
+```sh
+memcahed
+```
+
+
 To use grapheap, you must first create an instance of Grapheap,
 and construct your nodes and edges:    
 
