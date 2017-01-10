@@ -1,4 +1,4 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 
 setup(name='grapheap',
       version='0.1',
@@ -9,7 +9,7 @@ setup(name='grapheap',
       author='Sourabh Deokar (wilspi)',
       author_email='thewilspi@gmail.com',
       license='MIT',
-      packages=['grapheap'],
+      packages=find_packages(exclude=["*.tests", "*.tests.*", "tests.*", "tests"]),
       install_requires=[
           'pylibmc',
       ],
