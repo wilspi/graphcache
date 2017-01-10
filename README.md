@@ -32,7 +32,7 @@ Basic Use
 Run Memcached service:    
 
 ```sh
-memcahed
+memcached
 ```
 
 
