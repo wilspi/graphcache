@@ -1,1 +1,1 @@
-from . src.grapheap import Grapheap
+from .src.grapheap import Grapheap

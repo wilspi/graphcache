@@ -10,6 +10,7 @@ Read more about:
 Graph: https://en.wikipedia.org/wiki/Graph_(abstract_data_type)    
 Heap: https://en.wikipedia.org/wiki/Heap_(data_structure)   
 
+
 Installation
 ------------
 
@@ -19,11 +20,11 @@ To install grapheap, simply:
 pip install grapheap
 ```
 
-Or:    
-
+Install Memcache using Homebrew:
 ```sh
-easy_install grapheap
+brew install memcached
 ```
+
 
 Basic Use
 ---------
@@ -42,9 +43,10 @@ g = Grapheap()
 g.optimise_for(‘bananas’)
 g.optimise_for(‘apples’)
 
-# Create Nodes
+# Create Nodes (need 'apples', 'bananas' keys in all nodes, as they have been added to optimisation_keys)
 n1 = g.add_vertex({
     ‘name’: ‘Tom’,
+    'age': 24,
     ‘bananas’: 5,
     ‘apples’: 4
 })
@@ -55,6 +57,7 @@ n2 = g.add_vertex({
 })
 n3 = g.add_vertex({
     ‘name’: ‘Harry’,
+    'gender': 'Male',
     ‘bananas’: 3,
     ‘apples’: 1
 })
@@ -73,7 +76,7 @@ g.add_edge(n2, n1)
 ```
 
 
-Then you can perform filter, sort operations on any of the node to get the required adjacent nodes from that node:    
+Then you can perform filter/sort operations on any of the node to get the required adjacent nodes from that node:    
 
 ```python
 # Filter By
@@ -82,7 +85,7 @@ nodes1 = n2.get_outgoing().filter_by(“apples”, [1]).get_all_nodes()
 
 # Sort By
 # Get all incoming nodes (only adjacent) to n3 sorted by number of bananas they have
-nodes2 = n3.get_outgoing().sort_by(“bananas”).get_all_nodes()
+nodes2 = n3.get_incoming().sort_by(“bananas”).get_all_nodes()
 
 # Get first incoming node to n1 sorted by bananas
 node1 = n1.get_incoming().sort_by(‘bananas’).get_node_indexed_at(0)
@@ -93,4 +96,4 @@ Contributing
 ------------
 
 Contributions are awesome. You are most welcome to [submit issues](https://github.com/practo/grapheap/issues),
-or [fork the repository](https://github.com/practo/grapheap).\
+or [fork the repository](https://github.com/practo/grapheap).
