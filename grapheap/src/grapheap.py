@@ -149,6 +149,6 @@ class Grapheap:
 
 
 	def __repr__(self):
-		return '<Grapheap %r>' % self.entry.cache_key
+		return '<Grapheap %r>' % self.cache_key
 
 
