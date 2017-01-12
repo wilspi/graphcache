@@ -16,8 +16,13 @@ Installation
 
 To install grapheap, simply:   
 
+for Python2
 ```sh
 pip install grapheap
+```
+for Python3
+```sh
+pip3 install grapheap
 ```
 
 Install Memcache using Homebrew:
@@ -82,6 +87,8 @@ g.add_edge(n3, n4)
 g.add_edge(n2, n1)
 ```
 
+![grapheap](http://i.imgur.com/mbWiYet.png)
+
 
 Then you can perform filter/sort operations on any of the node to get the required adjacent nodes from that node:    
 
@@ -98,6 +105,16 @@ nodes2 = n3.get_incoming().sort_by('bananas').get_all_nodes()
 node1 = n1.get_incoming().sort_by('bananas').get_node_indexed_at(0)
 ```
 
+
+Also you can perform chained operations:    
+
+```python
+# Filter By, Sort By
+nodes1 = n2.get_outgoing().filter_by('apples', [1]).sort_by('bananas').get_all_nodes()
+
+# Sort By, Filter By, Filter By
+nodes2 = n3.get_incoming().sort_by('bananas').filter_by('bananas', [1]).filter_by('apples', [1]).get_all_nodes()
+```
 
 Contributing
 ------------
