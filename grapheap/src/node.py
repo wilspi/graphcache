@@ -3,7 +3,7 @@ from datetime import datetime
 import math
 
 from .. utils.cache import Cache
-from node_ref_group import NodeRefGroup
+from .node_ref_group import NodeRefGroup
 
 
 
