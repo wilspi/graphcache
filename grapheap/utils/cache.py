@@ -47,6 +47,9 @@ class Cache:
 		elif ttl > 0:
 			Cache.cache.set(key, value, ttl)
 
+		else:
+			raise Exception("Value Error: TTL must be positive")
+
 		return key
 
 
