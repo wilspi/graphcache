@@ -4,7 +4,7 @@ from node import Node
 Grapheap class
 
 :var optimisation_keys: specifies key (which are mandatory part of node.data)
-		for ordering the nodes in incoming/outgoing paths (supports integer values only)
+		for ordering the nodes in incoming/outgoing paths (supports numeric values)
 :var entry: Node type object which specifies the starting point for graph
 
 """

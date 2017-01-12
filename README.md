@@ -47,31 +47,31 @@ from grapheap import Grapheap
 g = Grapheap()
 
 # Add optimisation keys
-g.optimise_for(‘bananas’)
-g.optimise_for(‘apples’)
+g.optimise_for('bananas')
+g.optimise_for('apples')
 
 # Create Nodes (need 'apples', 'bananas' keys in all nodes, as they have been added to optimisation_keys)
 n1 = g.add_vertex({
-    ‘name’: ‘Tom’,
+    'name': 'Tom',
     'age': 24,
-    ‘bananas’: 5,
-    ‘apples’: 4
+    'bananas': 5,
+    'apples': 4
 })
 n2 = g.add_vertex({
-    ‘name’: ‘Bob’,
-    ‘bananas’: 0,
-    ‘apples’: 8
+    'name': 'Bob',
+    'bananas': 0,
+    'apples': 8
 })
 n3 = g.add_vertex({
-    ‘name’: ‘Harry’,
+    'name': 'Harry',
     'gender': 'Male',
-    ‘bananas’: 3,
-    ‘apples’: 1
+    'bananas': 3,
+    'apples': 1
 })
 n4 = g.add_vertex({
-    ‘name’: ‘Jill’,
-    ‘bananas’: 8,
-    ‘apples’: 1
+    'name': 'Jill',
+    'bananas': 8,
+    'apples': 1
 })
 
 # Connect them
@@ -88,14 +88,14 @@ Then you can perform filter/sort operations on any of the node to get the requir
 ```python
 # Filter By
 # Get all outgoing nodes (only adjacent) from n2 which have only 1 apples
-nodes1 = n2.get_outgoing().filter_by(“apples”, [1]).get_all_nodes()
+nodes1 = n2.get_outgoing().filter_by('apples', [1]).get_all_nodes()
 
 # Sort By
 # Get all incoming nodes (only adjacent) to n3 sorted by number of bananas they have
-nodes2 = n3.get_incoming().sort_by(“bananas”).get_all_nodes()
+nodes2 = n3.get_incoming().sort_by('bananas').get_all_nodes()
 
 # Get first incoming node to n1 sorted by bananas
-node1 = n1.get_incoming().sort_by(‘bananas’).get_node_indexed_at(0)
+node1 = n1.get_incoming().sort_by('bananas').get_node_indexed_at(0)
 ```
 
 
