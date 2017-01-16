@@ -2,7 +2,6 @@ from .node import Node
 from .. utils.cache import Cache
 
 
-
 """
 Grapheap class
 
@@ -13,142 +12,139 @@ Grapheap class
 :var cache_key: reference to self grapheap
 
 """
+
+
 class Grapheap:
 
-	# Global class variable which maintains unique id for nodes across each graph
-	count_nodes = 0
+    # Global class variable which maintains unique id for nodes across each
+    # graph
+    count_nodes = 0
 
-	def __init__(self, grapheap_ref=None, cache_sync=True):
-		"""
-		Init method (constructor)
+    def __init__(self, grapheap_ref=None, cache_sync=True):
+        """
+        Init method (constructor)
 
-		:param grapheap_ref: string
-		:param cache_sync: bool
-		"""
+        :param grapheap_ref: string
+        :param cache_sync: bool
+        """
 
-		# Create new grapheap
-		if grapheap_ref is None:
-			self.optimisation_keys = ['grapheap_node_id'] # atleast one key required
-			entry_node = Node(Grapheap.count_nodes,
-				{"grapheap_node_type": "entry node"},
-				self.optimisation_keys) # todo: cache
-			self.entry_node_ref = entry_node.cache_key
+        # Create new grapheap
+        if grapheap_ref is None:
+            # atleast one key required
+            self.optimisation_keys = ['grapheap_node_id']
+            entry_node = Node(Grapheap.count_nodes,
+                              {"grapheap_node_type": "entry node"},
+                              self.optimisation_keys)  # todo: cache
+            self.entry_node_ref = entry_node.cache_key
 
-			if cache_sync:
-				self.cache_key = Cache.get_random_key()
-				Cache.set(self.cache_key, self)
+            if cache_sync:
+                self.cache_key = Cache.get_random_key()
+                Cache.set(self.cache_key, self)
 
-		# Load existing from cache
-		else:
-			grapheap = Cache.get(grapheap_ref)
-			self.optimisation_keys = grapheap.optimisation_keys
-			self.entry_node_ref = grapheap.entry_node_ref
-			self.cache_key = grapheap.cache_key
+        # Load existing from cache
+        else:
+            grapheap = Cache.get(grapheap_ref)
+            self.optimisation_keys = grapheap.optimisation_keys
+            self.entry_node_ref = grapheap.entry_node_ref
+            self.cache_key = grapheap.cache_key
 
-		self.entry = Cache.get(self.entry_node_ref)
+        self.entry = Cache.get(self.entry_node_ref)
 
+    def get_node(self, node_ref):
+        """
+        Get node from cache, if exists
 
-	def get_node(self, node_ref):
-		"""
-		Get node from cache, if exists
+        :param node_ref: string
 
-		:param node_ref: string
+        :return node class type object
+        """
 
-		:return node class type object
-		"""
+        return Cache.get(node_ref)
 
-		return Cache.get(node_ref)
+    def add_vertex(self, data):
+        """
+        Add vertex to graph
 
+        :param data: dict
 
-	def add_vertex(self, data):
-		"""
-		Add vertex to graph
+        :return node class type object
+        """
 
-		:param data: dict
+        if self.__validate_node_data(data):
+            Grapheap.count_nodes += 1
+            node = Node(
+                Grapheap.count_nodes,
+                data,
+                self.optimisation_keys)
 
-		:return node class type object
-		"""
+            return node
 
-		if self.__validate_node_data(data):
-			Grapheap.count_nodes += 1
-			node = Node(
-				Grapheap.count_nodes,
-				data,
-				self.optimisation_keys)
+        else:
+            # _validate_node_data will return True or raise exception
+            pass
 
-			return node
+    def add_edge(self, vertex1, vertex2):
+        """
+        Edge from vertex1 to vertex2
 
-		else:
-			# _validate_node_data will return True or raise exception
-			pass
+        :param vertex1: node class type object
+        :param vertex2: node class type object
+        """
 
+        vertex1.add_outgoing_node(vertex2)
+        vertex2.add_incoming_node(vertex1)
 
-	def add_edge(self, vertex1, vertex2):
-		"""
-		Edge from vertex1 to vertex2
+    def optimise_for(self, key):
+        """
+        Append optimisation keys to graph for all its nodes
 
-		:param vertex1: node class type object
-		:param vertex2: node class type object
-		"""
+        :param key: string
+        """
 
-		vertex1.add_outgoing_node(vertex2)
-		vertex2.add_incoming_node(vertex1)
+        self.optimisation_keys.append(key)
+        self.entry.incoming_node_refs_list.add_optimisation_key(key)
+        self.entry.outgoing_node_refs_list.add_optimisation_key(key)
+        if key not in self.entry.data:
+            self.entry.update_data(key, 0)
+        # todo: update in all nodes
 
+    def traverse(self, node=None):
+        """
+        Traverse each node (once only)
+        """
 
-	def optimise_for(self, key):
-		"""
-		Append optimisation keys to graph for all its nodes
+        cur_node = self.entry
+        reached = []
+        to_traverse = [self.entry]
+        if node is not None:
+            to_traverse = [node]
 
-		:param key: string
-		"""
+        while to_traverse:
+            cur_node = to_traverse.pop()
+            if (cur_node.cache_key in reached):
+                continue
+            cur_node.print_data()
+            reached.append(cur_node.cache_key)
+            to_traverse.extend(cur_node.get_outgoing().get_all_nodes())
 
-		self.optimisation_keys.append(key)
-		self.entry.incoming_node_refs_list.add_optimisation_key(key)
-		self.entry.outgoing_node_refs_list.add_optimisation_key(key)
-		if key not in self.entry.data:
-			self.entry.update_data(key, 0)
-		# todo: update in all nodes
+    def __validate_node_data(self, data):
+        """
+        Validates if all optimisation keys exist in data
 
+        :param data: dict
 
-	def traverse(self, node=None):
-		"""
-		Traverse each node (once only)
-		"""
+        :return bool
+        """
 
-		cur_node = self.entry
-		reached = []
-		to_traverse = [self.entry]
-		if node is not None:
-			to_traverse = [node]
+        # skipping check of 'grapheap_node_id' optimisation key
+        if all(key in data for key in self.optimisation_keys[1:]):
+            return True
 
-		while to_traverse:
-			cur_node = to_traverse.pop()
-			if (cur_node.cache_key in reached):
-				continue
-			cur_node.print_data()
-			reached.append(cur_node.cache_key)
-			to_traverse.extend(cur_node.get_outgoing().get_all_nodes())
+        else:
+            missing_keys = [
+                x for x in self.optimisation_keys[1:] if x not in data]
+            raise ValueError("Grapheap Error: " + str(missing_keys) +
+                             " optimisation keys missing in data")
 
-
-	def __validate_node_data(self, data):
-		"""
-		Validates if all optimisation keys exist in data
-
-		:param data: dict
-
-		:return bool
-		"""
-
-		# skipping check of 'grapheap_node_id' optimisation key
-		if all(key in data for key in self.optimisation_keys[1:]):
-			return True
-
-		else:
-			missing_keys = [x for x in self.optimisation_keys[1:] if x not in data]
-			raise ValueError("Grapheap Error: " + str(missing_keys) + " optimisation keys missing in data")
-
-
-	def __repr__(self):
-		return '<Grapheap %r>' % self.cache_key
-
-
+    def __repr__(self):
+        return '<Grapheap %r>' % self.cache_key
