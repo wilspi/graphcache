@@ -6,87 +6,84 @@ import random
 Cache class
 
 """
+
+
 class Cache:
 
-	# Global memcache client for this class
-	cache = pylibmc.Client(
-		["127.0.0.1"],
-		binary=True,
-		behaviors={"tcp_nodelay": True, "ketama": True})
+    # Global memcache client for this class
+    cache = pylibmc.Client(
+        ["127.0.0.1"],
+        binary=True,
+        behaviors={"tcp_nodelay": True, "ketama": True})
 
+    @staticmethod
+    def get_random_key(size=6, chars=string.ascii_uppercase + string.digits):
+        """
+        Get random key
 
-	@staticmethod
-	def get_random_key(size=6, chars=string.ascii_uppercase + string.digits):
-		"""
-		Get random key
+        :param size: int
+        :param chars: string
 
-		:param size: int
-		:param chars: string
+        :return string
+        """
 
-		:return string
-		"""
+        return ''.join(random.choice(chars) for _ in range(size))
 
-		return ''.join(random.choice(chars) for _ in range(size))
+    @staticmethod
+    def set(key, value, ttl=None):
+        """
+        Set key-value pair in cache
 
+        :param key: string
+        :param value: any data type
+        :param ttl: int
 
-	@staticmethod
-	def set(key, value, ttl=None):
-		"""
-		Set key-value pair in cache
+        :return string
+        """
 
-		:param key: string
-		:param value: any data type
-		:param ttl: int
+        if ttl is None:
+            Cache.cache.set(key, value)
 
-		:return string
-		"""
+        elif ttl > 0:
+            Cache.cache.set(key, value, ttl)
 
-		if ttl is None:
-			Cache.cache.set(key, value)
+        else:
+            raise Exception("Value Error: TTL must be positive")
 
-		elif ttl > 0:
-			Cache.cache.set(key, value, ttl)
+        return key
 
-		else:
-			raise Exception("Value Error: TTL must be positive")
+    @staticmethod
+    def get(key, silent=False):
+        """
+        Get value by key from cache
 
-		return key
+        :param key: string
+        :param silent: bool
 
+        :return any data type
+        """
 
-	@staticmethod
-	def get(key, silent=False):
-		"""
-		Get value by key from cache
+        try:
+            value = Cache.cache[key]
 
-		:param key: string
-		:param silent: bool
+        except Exception:
+            if silent:
+                return None
+            raise Exception("Cache Exception: " + key + " is not found")
 
-		:return any data type
-		"""
+        return value
 
-		try:
-			value = Cache.cache[key]
+    @staticmethod
+    def remove(key):
+        """
+        Remove key-value pair from cache
 
-		except Exception:
-			if silent:
-				return None
-			raise Exception("Cache Exception: " + key + " is not found")
+        :param key: string
+        """
 
-		return value
+        try:
+            Cache.get(key)
+            del Cache.cache[key]
 
-
-	@staticmethod
-	def remove(key):
-		"""
-		Remove key-value pair from cache
-
-		:param key: string
-		"""
-
-		try:
-			Cache.get(key)
-			del Cache.cache[key]
-
-		except Exception:
-			pass
-
+        except Exception:
+            pass
