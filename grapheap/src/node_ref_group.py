@@ -35,6 +35,18 @@ class NodeRefGroup:
 		self._ref_lists[key] = []
 
 
+	def remove_node_ref(self, node):
+		"""
+		Remove node reference from _ref_lists in all optimisation keys
+
+		"""
+
+		optimisation_keys = list(self._ref_lists.keys())
+		for key in optimisation_keys:
+			if node.cache_key in self._ref_lists[key]:
+				self._ref_lists[key].remove(node.cache_key)
+
+
 	def add_node_ref(self, node):
 		"""
 		Add new node reference in _ref_lists in all optimisation keys

@@ -3,7 +3,7 @@ from datetime import datetime
 import math
 
 from .. utils.cache import Cache
-from node_ref_group import NodeRefGroup
+from .node_ref_group import NodeRefGroup
 
 
 
@@ -35,19 +35,20 @@ class Node:
 			self.data = {}
 		else:
 			self.data = data
-		self.data['node_id'] = id
+		self.data['grapheap_node_id'] = id
 		self.incoming_node_refs_list = NodeRefGroup(optimisation_keys)
 		self.outgoing_node_refs_list = NodeRefGroup(optimisation_keys)
-		self.ttl_set_at = datetime.now()
-		self.ttl = ttl
-		if cache_sync:
+
+		if ttl or cache_sync:
+			self.ttl_set_at = datetime.now()
+			self.ttl = ttl
 			self.cache_key = Cache.get_random_key()
 			Cache.set(self.cache_key, self, self.ttl)
 
 
-	def append_data(self, key, value, cache_sync=True):
+	def update_data(self, key, value, cache_sync=True):
 		"""
-		Append more key-value pair into node.data
+		Update existing or append more key-value pair into node.data
 
 		:param key: string
 		:param value: any type
@@ -56,6 +57,7 @@ class Node:
 
 		self.data[key] = value
 		self.__update_in_cache(cache_sync) # update in cache
+		self.__refresh() # update order when value changes
 
 
 	def get_incoming(self):
@@ -68,7 +70,6 @@ class Node:
 		return self.incoming_node_refs_list
 
 
-
 	def add_incoming_node(self, node, cache_sync=True):
 		"""
 		Adds incoming node to self NodeRefGroup for incoming nodes
@@ -77,7 +78,19 @@ class Node:
 		:param cache_sync: bool
 		"""
 
-		self.incoming_node_refs_list.add_node_ref(node)
+		self.get_incoming().add_node_ref(node)
+		self.__update_in_cache(cache_sync) # update in cache
+
+
+	def remove_incoming_node(self, node, cache_sync=True):
+		"""
+		Removes incoming node from self NodeRefGroup for incoming nodes
+
+		:param node: Node class type object
+		:param cache_sync: bool
+		"""
+
+		self.get_incoming().remove_node_ref(node)
 		self.__update_in_cache(cache_sync) # update in cache
 
 
@@ -99,7 +112,19 @@ class Node:
 		:param cache_sync: bool
 		"""
 
-		self.outgoing_node_refs_list.add_node_ref(node)
+		self.get_outgoing().add_node_ref(node)
+		self.__update_in_cache(cache_sync) # update in cache
+
+
+	def remove_outgoing_node(self, node, cache_sync=True):
+		"""
+		Removes outgoing node from self NodeRefGroup for outgoing nodes
+
+		:param node: Node class type object
+		:param cache_sync: bool
+		"""
+
+		self.get_outgoing().remove_node_ref(node)
 		self.__update_in_cache(cache_sync) # update in cache
 
 
@@ -144,6 +169,22 @@ class Node:
 
 		if self.cache_key and cache_sync:
 			Cache.set(self.cache_key, self, self.get_ttl())
+
+
+	def __refresh(self, cache_sync=True):
+		"""
+		Updates all outgoing paths to self node according to the current data value
+		(private)
+
+		:param cache_sync: bool
+		"""
+
+		nodes = self.get_incoming().get_all_nodes()
+		for node in nodes:
+			node.remove_outgoing_node(self)
+			node.add_outgoing_node(self) # add at appropriate place
+
+		self.__update_in_cache(cache_sync) # update in cache
 
 
 	def print_data(self):
