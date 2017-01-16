@@ -1,4 +1,5 @@
 
+import numbers
 from bisect import bisect_right
 from .. utils.cache import Cache
 
@@ -79,13 +80,15 @@ class NodeRefGroup:
 
         return self
 
-    def filter_by(self, key, values):
+    def filter_by(self, key, input1, operator="eq"):
         """
         Filter nodes in the list
-        Returns nodes which has node.data[key] in given list of values
+        Returns nodes which has node.data[key] based on operator and respective values
 
         :param key: string
-        :param values: list of values (value supports integer only)
+        :param input1: list of values (value supports numerical values only)
+        :param operator: defines what type of filter is being applied (optional)
+            example: "gt" defines greater than
 
         :return NodeRefGroup class type object
         """
@@ -94,9 +97,49 @@ class NodeRefGroup:
             optimisation_keys = list(self._ref_lists.keys())
             self._temp_list = self._ref_lists[optimisation_keys[0]]
 
-        # list of all filtered nodes
-        self._temp_list = [node.cache_key for node in self.get_all_nodes() if node.data[
-            key] in values]
+        # less than
+        if operator == "lt":
+            assert isinstance(
+                input1, numbers.Real), ("Error: numerical value required, " + str(input1) + " given")
+
+            self._temp_list = [node.cache_key for node in self.get_all_nodes() if node.data[
+                key] < input1]
+
+        # greater than
+        elif operator == "gt":
+            assert isinstance(
+                input1, numbers.Real), ("Error: numerical value required, " + str(input1) + " given")
+
+            self._temp_list = [node.cache_key for node in self.get_all_nodes() if node.data[
+                key] > input1]
+
+        # not equal to
+        elif operator == "ne":
+            assert isinstance(
+                input1, (list)), ("Error: value must be list of numbers, " + str(input1) + " given")
+
+            self._temp_list = [node.cache_key for node in self.get_all_nodes() if node.data[
+                key] not in input1]
+
+        # equal to
+        elif operator == "eq":
+            assert isinstance(
+                input1, (list)), ("Error: value must be list of numbers, " + str(input1) + " given")
+
+            self._temp_list = [node.cache_key for node in self.get_all_nodes() if node.data[
+                key] in input1]
+
+        # between range
+        elif operator == "in":
+            assert (isinstance(input1, (list)) and len(input1) == 2), (
+                "Error: input must be a list with two values defining the range, " + str(input1) + " given")
+
+            self._temp_list = [node.cache_key for node in self.get_all_nodes() if (
+                (node.data[key] >= input1[0]) and (node.data[key] <= input1[1]))]
+
+        else:
+            raise Exception("Error: operator does not match, " +
+                            str(operator) + " given")
 
         return self
 
