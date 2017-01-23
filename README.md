@@ -90,7 +90,7 @@ g.add_edge(n2, n1)
 ![grapheap](http://i.imgur.com/mbWiYet.png)
 
 
-Then you can perform filter/sort operations on any of the node to get the required adjacent nodes from that node:    
+Then you can perform filter/sort operations on any of the node to get the required adjacent nodes from that node:
 
 ```python
 # Filter By
@@ -106,14 +106,15 @@ node1 = n1.get_incoming().sort_by('bananas').get_node_indexed_at(0)
 ```
 
 
-Also you can perform chained operations:    
+Also you can perform chained complex operations:
 
 ```python
 # Filter By, Sort By
-nodes1 = n2.get_outgoing().filter_by('apples', [1]).sort_by('bananas').get_all_nodes()
+# Get all outgoing nodes (only adjacent) from n2 with apples less than 5 and sorted by bananas
+nodes1 = n2.get_outgoing().filter_by('apples', 5, "lt").sort_by('bananas').get_all_nodes()
 
 # Sort By, Filter By, Filter By
-nodes2 = n3.get_incoming().sort_by('bananas').filter_by('bananas', [1]).filter_by('apples', [1]).get_all_nodes()
+nodes2 = n3.get_incoming().sort_by('bananas').filter_by('bananas', [1, 5], "in").filter_by('apples', [1]).get_all_nodes()
 ```
 
 Contributing

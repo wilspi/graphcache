@@ -21,10 +21,14 @@ class Cache:
         """
         Get random key
 
-        :param size: int
-        :param chars: string
+        Parameters
+        ----------
+        size: int
+        chars: string
 
-        :return string
+        Returns
+        -------
+        string
         """
 
         return ''.join(random.choice(chars) for _ in range(size))
@@ -34,11 +38,15 @@ class Cache:
         """
         Set key-value pair in cache
 
-        :param key: string
-        :param value: any data type
-        :param ttl: int
+        Parameters
+        ----------
+        key: string
+        value: any data type
+        ttl: int
 
-        :return string
+        Returns
+        -------
+        string
         """
 
         if ttl is None:
@@ -57,10 +65,15 @@ class Cache:
         """
         Get value by key from cache
 
-        :param key: string
-        :param silent: bool
+        Parameters
+        ----------
+        key: string
+        silent: bool
 
-        :return any data type
+        Returns
+        -------
+        any type
+            value of any type, which was stored
         """
 
         try:
@@ -78,7 +91,9 @@ class Cache:
         """
         Remove key-value pair from cache
 
-        :param key: string
+        Parameters
+        ----------
+        key: string
         """
 
         try:
