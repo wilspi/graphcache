@@ -32,8 +32,8 @@ setup(name='grapheap',
               "tests"]),
       data_files=[
           (expanduser("~") +
-           '/grapheap_configs',
-           ['config/cache.conf'])],
+           '/',
+           ['config/grapheap_config.conf'])],
       install_requires=[
           'pylibmc',
           'configparser'
