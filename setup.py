@@ -36,6 +36,7 @@ setup(name='grapheap',
            ['config/cache.conf'])],
       install_requires=[
           'pylibmc',
+          'configparser'
       ],
       include_package_data=True,
       zip_safe=False)

@@ -1,11 +1,18 @@
 import pylibmc
 import string
 import random
-import ConfigParser
+import sys
 from os.path import expanduser
 
+# Python version
+if sys.version_info[0] < 3:
+    from ConfigParser import ConfigParser # python 2
+else:
+    from configparser import ConfigParser # python 3
+
+
 # Get cache configuration from ~/grapheap_configs/cache.conf
-Config = ConfigParser.ConfigParser()
+Config = ConfigParser()
 Config.read(expanduser("~") + '/grapheap_configs/cache.conf')
 cache_server = Config.get("Memcache", "cache_server")
 
@@ -19,7 +26,7 @@ class Cache:
 
     # Global memcache client for this class
     cache = pylibmc.Client(
-        ["127.0.0.1"],
+        [cache_server],
         binary=True,
         behaviors={"tcp_nodelay": True, "ketama": True})
 
