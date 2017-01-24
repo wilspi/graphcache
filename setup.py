@@ -1,4 +1,6 @@
 from setuptools import setup, find_packages
+from os.path import expanduser
+
 
 setup(name='grapheap',
       version='0.1',
@@ -23,9 +25,18 @@ setup(name='grapheap',
           'Programming Language :: Python :: 3.4',
       ],
       packages=find_packages(
-          exclude=["*.tests", "*.tests.*", "tests.*", "tests"]),
+          exclude=[
+              "*.tests",
+              "*.tests.*",
+              "tests.*",
+              "tests"]),
+      data_files=[
+          (expanduser("~") +
+           '/',
+           ['config/grapheap_config.conf'])],
       install_requires=[
           'pylibmc',
+          'configparser'
       ],
       include_package_data=True,
       zip_safe=False)

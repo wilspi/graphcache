@@ -31,13 +31,23 @@ brew install memcached
 ```
 
 
+Configuration
+-------------
+
+Update memcache configuration:   
+
+```sh
+sudo vim ~/grapheap_config.conf
+```
+
+
 Basic Use
 ---------
 
 Run Memcached service:    
 
 ```sh
-memcached
+memcached -p 11211
 ```
 
 

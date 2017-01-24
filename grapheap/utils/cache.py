@@ -1,6 +1,21 @@
 import pylibmc
 import string
 import random
+import sys
+from os.path import expanduser
+
+# Python version
+if sys.version_info[0] < 3:
+    from ConfigParser import ConfigParser # python 2
+else:
+    from configparser import ConfigParser # python 3
+
+
+# Get cache configuration from ~/grapheap_config.conf
+Config = ConfigParser()
+Config.read(expanduser("~") + '/grapheap_config.conf')
+cache_servers = Config.get("Memcache", "cache_servers")
+cache_servers = cache_servers[1:-1].split(',')
 
 """
 Cache class
@@ -11,10 +26,13 @@ Cache class
 class Cache:
 
     # Global memcache client for this class
-    cache = pylibmc.Client(
-        ["127.0.0.1"],
-        binary=True,
-        behaviors={"tcp_nodelay": True, "ketama": True})
+    try:
+        cache = pylibmc.Client(
+            cache_servers,
+            binary=True,
+            behaviors={"tcp_nodelay": True, "ketama": True})
+    except Exception:
+        raise Exception("Cache Error: Failed to connect to server")
 
     @staticmethod
     def get_random_key(size=6, chars=string.ascii_uppercase + string.digits):
@@ -31,7 +49,7 @@ class Cache:
         string
         """
 
-        return ''.join(random.choice(chars) for _ in range(size))
+        return 'grapheap-'.join(random.choice(chars) for _ in range(size))
 
     @staticmethod
     def set(key, value, ttl=None):
