@@ -11,9 +11,9 @@ else:
     from configparser import ConfigParser # python 3
 
 
-# Get cache configuration from ~/grapheap_configs/cache.conf
+# Get cache configuration from ~/grapheap_config.conf
 Config = ConfigParser()
-Config.read(expanduser("~") + '/grapheap_configs/cache.conf')
+Config.read(expanduser("~") + '/grapheap_config.conf')
 cache_server = Config.get("Memcache", "cache_server")
 
 """
