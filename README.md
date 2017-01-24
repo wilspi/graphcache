@@ -127,6 +127,19 @@ nodes1 = n2.get_outgoing().filter_by('apples', 5, "lt").sort_by('bananas').get_a
 nodes2 = n3.get_incoming().sort_by('bananas').filter_by('bananas', [1, 5], "in").filter_by('apples', [1]).get_all_nodes()
 ```
 
+Metrics 
+-------
+
+* **Filter By (equal to):** 0.0065 seconds
+* **Filter By (less than):** 0.0065 seconds
+* **Filter By (greater than):** 0.0099 seconds
+* **Filter By (range):** 0.0115 seconds
+* **Sort By:** 0.0088 seconds
+* **Filter By, Filter By:** 0.0119 seconds
+* **Filter By, Sort By:** 0.0155 seconds
+
+*Operations are performed on the node which is connected to 100 nodes*
+
 Contributing
 ------------
 
