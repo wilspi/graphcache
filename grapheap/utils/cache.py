@@ -50,7 +50,7 @@ class Cache:
         string
         """
 
-        return 'grapheap-'.join(''.join(random.choice(chars) for _ in range(size)))
+        return 'grapheap-'+(''.join(random.choice(chars) for _ in range(size)))
 
 
     @staticmethod
