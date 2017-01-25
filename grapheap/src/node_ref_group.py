@@ -185,8 +185,8 @@ class NodeRefGroup:
 
         # in array list
         elif operator == "in":
-            assert (isinstance(input1, (list)) and len(input1) == 2), (
-                "Error: input must be a list with two values defining the range, " + str(input1) + " given")
+            assert (isinstance(input1, (list))), (
+                "Error: input must be a list, " + str(input1) + " given")
 
             self._temp_list = [node.cache_key for node in self.get_all_nodes() if (
                 node.data[key] in input1)]
