@@ -135,6 +135,14 @@ class NodeRefGroup:
             self._temp_list = [node.cache_key for node in self.get_all_nodes() if node.data[
                 key] < input1]
 
+        # less than or equal to
+        if operator == "le":
+            assert isinstance(
+                input1, numbers.Real), ("Error: numerical value required, " + str(input1) + " given")
+
+            self._temp_list = [node.cache_key for node in self.get_all_nodes() if node.data[
+                key] <= input1]
+
         # greater than
         elif operator == "gt":
             assert isinstance(
@@ -142,6 +150,14 @@ class NodeRefGroup:
 
             self._temp_list = [node.cache_key for node in self.get_all_nodes() if node.data[
                 key] > input1]
+
+        # greater than or equal to
+        elif operator == "ge":
+            assert isinstance(
+                input1, numbers.Real), ("Error: numerical value required, " + str(input1) + " given")
+
+            self._temp_list = [node.cache_key for node in self.get_all_nodes() if node.data[
+                key] >= input1]
 
         # not equal to
         elif operator == "ne":
