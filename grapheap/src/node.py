@@ -6,27 +6,26 @@ from .. utils.cache import Cache
 from .node_ref_group import NodeRefGroup
 
 
-"""
-Node class
-
-Members
--------
-cache_key: string
-    reference to self node in cache
-data: dict
-    specifies node's data (key-value pairs)
-incoming_node_refs_list: NodeRefGroup object
-    NodeRefGroup class type object which specifies all incoming nodes to self node
-outgoing_node_refs_list: NodeRefGroup object
-    NodeRefGroup class type object which specifies all outgoing nodes to self node
-ttl: integer
-    TTL (time to live) after which node will not be accessible
-ttl_set_at: time
-    time at which ttl is set
-"""
-
 
 class Node:
+    """
+    Node class
+
+    Members
+    -------
+    cache_key: string
+        reference to self node in cache
+    data: dict
+        specifies node's data (key-value pairs)
+    incoming_node_refs_list: NodeRefGroup object
+        NodeRefGroup class type object which specifies all incoming nodes to self node
+    outgoing_node_refs_list: NodeRefGroup object
+        NodeRefGroup class type object which specifies all outgoing nodes to self node
+    ttl: integer
+        TTL (time to live) after which node will not be accessible
+    ttl_set_at: time
+        time at which ttl is set
+    """
 
     def __init__(self, id, data=None, optimisation_keys=[], ttl=None, cache_sync=True):
         """

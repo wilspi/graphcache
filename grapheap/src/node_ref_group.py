@@ -3,19 +3,19 @@ import numbers
 from bisect import bisect_right
 from .. utils.cache import Cache
 
-"""
-NodeRefGroup class
-
-Members
--------
-_ref_lists: dict
-    dictionary with keys as optimisation key and value as references to nodes sorted by that optimisation key
-_temp_list: list
-    temporary node reference list for storing operations output (for function chaining)
-"""
 
 
 class NodeRefGroup:
+    """
+    NodeRefGroup class
+
+    Members
+    -------
+    _ref_lists: dict
+        dictionary with keys as optimisation key and value as references to nodes sorted by that optimisation key
+    _temp_list: list
+        temporary node reference list for storing operations output (for function chaining)
+    """
 
     def __init__(self, optimisation_keys):
         """

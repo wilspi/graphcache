@@ -2,24 +2,23 @@ from .node import Node
 from .. utils.cache import Cache
 
 
-"""
-Grapheap class
-
-Members
--------
-optimisation_keys: list
-    specifies key (which are mandatory part of node.data)
-	for ordering the nodes in incoming/outgoing paths (supports numeric values)
-entry_node: Node object
-    Node type object which specifies the starting point for graph
-entry_node_ref: string
-    reference to entry node
-cache_key: string
-    reference to self ie grapheap
-"""
-
 
 class Grapheap:
+    """
+    Grapheap class
+
+    Members
+    -------
+    optimisation_keys: list
+        specifies key (which are mandatory part of node.data)
+        for ordering the nodes in incoming/outgoing paths (supports numeric values)
+    entry_node: Node object
+        Node type object which specifies the starting point for graph
+    entry_node_ref: string
+        reference to entry node
+    cache_key: string
+        reference to self ie grapheap
+    """
 
     # Global class variable which maintains unique id for nodes across each grapheap
     # Also used for 'grapheap_node_id' optimisation key for each node
