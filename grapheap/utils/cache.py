@@ -52,6 +52,7 @@ class Cache:
 
         return 'grapheap-'.join(''.join(random.choice(chars) for _ in range(size)))
 
+
     @staticmethod
     def set(key, value, ttl=None):
         """
