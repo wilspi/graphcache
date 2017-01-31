@@ -77,6 +77,30 @@ class Node:
         self.__update_in_cache(cache_sync)  # updates in cache
         self.__refresh()  # updates order when value changes
 
+    def get_cache_key(self):
+        """
+        Get reference key for self node used to save in cache
+
+        Returns
+        -------
+        string
+            reference key for self node in cache
+        """
+
+        return self.cache_key
+
+    def get_data(self):
+        """
+        Get data of self node
+
+        Returns
+        -------
+        dict
+            node's data
+        """
+
+        return self.data
+
     def get_incoming(self):
         """
         Get NodeRefGroup class object for incoming nodes
