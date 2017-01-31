@@ -24,7 +24,7 @@ class Grapheap:
     # Also used for 'grapheap_node_id' optimisation key for each node
     count_nodes = 0
 
-    def __init__(self, grapheap_ref=None, cache_sync=True):
+    def __init__(self, grapheap_ref=None):
         """
         Init method (constructor)
 
@@ -45,9 +45,9 @@ class Grapheap:
                               self.optimisation_keys)  # todo: cache
             self.entry_node_ref = entry_node.cache_key
 
-            if cache_sync:
-                self.cache_key = Cache.get_random_key()
-                Cache.set(self.cache_key, self)
+            # Set the object in Cache
+            self.cache_key = Cache.get_random_key()
+            Cache.set(self.cache_key, self)
 
         # Load existing from cache
         else:
