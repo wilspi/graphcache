@@ -3,13 +3,13 @@ from os.path import expanduser
 
 
 setup(name='grapheap',
-      version='0.1',
-      description='Read optimised graph, inspired by heap',
-      long_description='Read http://github.com/practo/grapheap',
-      keywords='grapheap graph heap python node memcache',
-      url='http://github.com/practo/grapheap',
+      version='0.1.1',
+      description='Python library to store connected nodes and their properties on cache storage',
+      long_description='Read http://github.com/wilspi/grapheap',
+      keywords='grapheap graph cache python node memcache',
+      url='http://github.com/wilspi/grapheap',
       author='Sourabh Deokar (wilspi)',
-      author_email='thewilspi@gmail.com',
+      author_email='the.wilspi@gmail.com',
       license='MIT',
       classifiers=[
           'Development Status :: 3 - Alpha',
