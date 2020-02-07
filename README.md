@@ -1,14 +1,6 @@
-==========
- grapheap
-==========
+# grapheap
 
-A read optimised graph (DS) library    
-
-
-Read more about:   
-
-Graph: https://en.wikipedia.org/wiki/Graph_(abstract_data_type)    
-Heap: https://en.wikipedia.org/wiki/Heap_(data_structure)   
+Python Library to store connected nodes and their properties on cache storage (memcache)
 
 
 Installation
@@ -25,6 +17,7 @@ for Python3
 pip3 install grapheap
 ```
 
+On Macos:   
 Install Memcache using Homebrew:
 ```sh
 brew install memcached
@@ -139,9 +132,3 @@ Metrics
 * **Filter By, Sort By:** 0.0155 seconds
 
 *Operations are performed on the node which is connected to 100 nodes*
-
-Contributing
-------------
-
-Contributions are awesome. You are most welcome to [submit issues](https://github.com/practo/grapheap/issues),
-or [fork the repository](https://github.com/practo/grapheap).
