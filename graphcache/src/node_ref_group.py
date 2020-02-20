@@ -1,8 +1,6 @@
-
 import numbers
 from bisect import bisect_right
-from .. utils.cache import Cache
-
+from ..utils.cache import Cache
 
 
 class NodeRefGroup:
@@ -97,8 +95,11 @@ class NodeRefGroup:
 
         else:
             # list of all filtered nodes
-            self._temp_list = [node_ref for node_ref in self._ref_lists[
-                key] if node_ref in self._temp_list]
+            self._temp_list = [
+                node_ref
+                for node_ref in self._ref_lists[key]
+                if node_ref in self._temp_list
+            ]
 
         return self
 
@@ -129,71 +130,106 @@ class NodeRefGroup:
 
         # less than
         if operator == "lt":
-            assert isinstance(
-                input1, numbers.Real), ("Error: numerical value required, " + str(input1) + " given")
+            assert isinstance(input1, numbers.Real), (
+                "Error: numerical value required, " + str(input1) + " given"
+            )
 
-            self._temp_list = [node.cache_key for node in self.get_all_nodes() if node.data[
-                key] < input1]
+            self._temp_list = [
+                node.cache_key
+                for node in self.get_all_nodes()
+                if node.data[key] < input1
+            ]
 
         # less than or equal to
         if operator == "le":
-            assert isinstance(
-                input1, numbers.Real), ("Error: numerical value required, " + str(input1) + " given")
+            assert isinstance(input1, numbers.Real), (
+                "Error: numerical value required, " + str(input1) + " given"
+            )
 
-            self._temp_list = [node.cache_key for node in self.get_all_nodes() if node.data[
-                key] <= input1]
+            self._temp_list = [
+                node.cache_key
+                for node in self.get_all_nodes()
+                if node.data[key] <= input1
+            ]
 
         # greater than
         elif operator == "gt":
-            assert isinstance(
-                input1, numbers.Real), ("Error: numerical value required, " + str(input1) + " given")
+            assert isinstance(input1, numbers.Real), (
+                "Error: numerical value required, " + str(input1) + " given"
+            )
 
-            self._temp_list = [node.cache_key for node in self.get_all_nodes() if node.data[
-                key] > input1]
+            self._temp_list = [
+                node.cache_key
+                for node in self.get_all_nodes()
+                if node.data[key] > input1
+            ]
 
         # greater than or equal to
         elif operator == "ge":
-            assert isinstance(
-                input1, numbers.Real), ("Error: numerical value required, " + str(input1) + " given")
+            assert isinstance(input1, numbers.Real), (
+                "Error: numerical value required, " + str(input1) + " given"
+            )
 
-            self._temp_list = [node.cache_key for node in self.get_all_nodes() if node.data[
-                key] >= input1]
+            self._temp_list = [
+                node.cache_key
+                for node in self.get_all_nodes()
+                if node.data[key] >= input1
+            ]
 
         # not equal to
         elif operator == "ne":
-            assert isinstance(
-                input1, (list)), ("Error: value must be list of numbers, " + str(input1) + " given")
+            assert isinstance(input1, (list)), (
+                "Error: value must be list of numbers, " + str(input1) + " given"
+            )
 
-            self._temp_list = [node.cache_key for node in self.get_all_nodes() if node.data[
-                key] not in input1]
+            self._temp_list = [
+                node.cache_key
+                for node in self.get_all_nodes()
+                if node.data[key] not in input1
+            ]
 
         # equal to
         elif operator == "eq":
-            assert isinstance(
-                input1, (list)), ("Error: value must be list of numbers, " + str(input1) + " given")
+            assert isinstance(input1, (list)), (
+                "Error: value must be list of numbers, " + str(input1) + " given"
+            )
 
-            self._temp_list = [node.cache_key for node in self.get_all_nodes() if node.data[
-                key] in input1]
+            self._temp_list = [
+                node.cache_key
+                for node in self.get_all_nodes()
+                if node.data[key] in input1
+            ]
 
         # between range
         elif operator == "range":
-            assert (isinstance(input1, (list)) and len(input1) == 2), (
-                "Error: input must be a list with two values defining the range, " + str(input1) + " given")
+            assert isinstance(input1, (list)) and len(input1) == 2, (
+                "Error: input must be a list with two values defining the range, "
+                + str(input1)
+                + " given"
+            )
 
-            self._temp_list = [node.cache_key for node in self.get_all_nodes() if (
-                (node.data[key] >= input1[0]) and (node.data[key] <= input1[1]))]
+            self._temp_list = [
+                node.cache_key
+                for node in self.get_all_nodes()
+                if ((node.data[key] >= input1[0]) and (node.data[key] <= input1[1]))
+            ]
 
         # in array list
         elif operator == "in":
-            assert (isinstance(input1, (list))), (
-                "Error: input must be a list, " + str(input1) + " given")
+            assert isinstance(input1, (list)), (
+                "Error: input must be a list, " + str(input1) + " given"
+            )
 
-            self._temp_list = [node.cache_key for node in self.get_all_nodes() if (
-                node.data[key] in input1)]
+            self._temp_list = [
+                node.cache_key
+                for node in self.get_all_nodes()
+                if (node.data[key] in input1)
+            ]
 
         else:
-            raise Exception("Error: operator does not match, " +
-                            str(operator) + " given")
+            raise Exception(
+                "Error: operator does not match, " + str(operator) + " given"
+            )
 
         return self
 
@@ -215,8 +251,7 @@ class NodeRefGroup:
             self._temp_list = self._ref_lists[optimisation_keys[0]]
 
         # expired node ref keys still exist in _ref_lists
-        nodes = filter(
-            None, map(lambda x: Cache.get(x, True), self._temp_list))
+        nodes = filter(None, map(lambda x: Cache.get(x, True), self._temp_list))
         self._temp_list = None  # reset _temp_list
 
         return list(nodes)
@@ -270,7 +305,8 @@ class NodeRefGroup:
         if nodes:
             # list of all node values of given key
             list_of_values = list(
-                filter(None, ((yield node.data[key]) for node in nodes)))
+                filter(None, ((yield node.data[key]) for node in nodes))
+            )
 
             # get appropriate position and insert
             pos = bisect_right(list_of_values, node_to_add.data[key])

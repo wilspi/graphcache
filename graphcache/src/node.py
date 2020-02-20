@@ -1,10 +1,8 @@
-
 from datetime import datetime
 import math
 
-from .. utils.cache import Cache
+from ..utils.cache import Cache
 from .node_ref_group import NodeRefGroup
-
 
 
 class Node:
@@ -34,7 +32,7 @@ class Node:
         Parameters
         ----------
         id: int
-            id defined by grapheap's count_nodes
+            id defined by graphcache's count_nodes
         data: dict
             data dictionary for self node
         optimisation_keys: list
@@ -49,7 +47,7 @@ class Node:
             self.data = {}
         else:
             self.data = data
-        self.data['grapheap_node_id'] = id
+        self.data["graphcache_node_id"] = id
         self.incoming_node_refs_list = NodeRefGroup(optimisation_keys)
         self.outgoing_node_refs_list = NodeRefGroup(optimisation_keys)
 
@@ -260,14 +258,18 @@ class Node:
 
         print("## " + self.cache_key)
         print("###########")
-        print("OUTGOING (sorted by ID): " +
-              str(self.outgoing_node_refs_list.get_all_nodes()))
-        print("INCOMING (sorted by ID): " +
-              str(self.incoming_node_refs_list.get_all_nodes()))
+        print(
+            "OUTGOING (sorted by ID): "
+            + str(self.outgoing_node_refs_list.get_all_nodes())
+        )
+        print(
+            "INCOMING (sorted by ID): "
+            + str(self.incoming_node_refs_list.get_all_nodes())
+        )
         print("DATA: ")
         for k in self.data:
             print(k + ": " + str(self.data[k]))
         print()
 
     def __repr__(self):
-        return '<Node %r>' % self.cache_key
+        return "<Node %r>" % self.cache_key

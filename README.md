@@ -1,4 +1,4 @@
-# grapheap
+# graphcache
 
 Python Library to store connected nodes and their properties on cache storage (memcache)
 
@@ -6,19 +6,13 @@ Python Library to store connected nodes and their properties on cache storage (m
 Installation
 ------------
 
-To install grapheap, simply:   
-
-for Python2
+To install `graphcache`, simply:   
 ```sh
-pip install grapheap
-```
-for Python3
-```sh
-pip3 install grapheap
+pip install graphcache
 ```
 
-On Macos:   
-Install Memcache using Homebrew:
+On macos:   
+Install `memcache` using `Homebrew`:
 ```sh
 brew install memcached
 ```
@@ -27,31 +21,31 @@ brew install memcached
 Configuration
 -------------
 
-Update memcache configuration:   
+Update `memcache` configuration:   
 
 ```sh
-sudo vim ~/grapheap_config.conf
+sudo vim ~/graphcache_config.conf
 ```
 
 
 Basic Use
 ---------
 
-Run Memcached service:    
+Run `memcached` service:    
 
 ```sh
 memcached -p 11211
 ```
 
 
-To use grapheap, you must first create an instance of Grapheap,
+To use graphcache, you must first create an instance of GraphCache,
 and construct your nodes and edges:    
 
 ```python
-# Import Grapheap
-from grapheap import Grapheap
+# Import GraphCache
+from graphcache import GraphCache
 
-# Create a grapheap
+graphcache
 g = Grapheap()
 
 # Add optimisation keys
