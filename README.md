@@ -6,7 +6,7 @@ Python Library to store connected nodes and their properties on cache storage (r
 Installation
 ------------
 
-To install `graphcache`, simply:   
+To install `graphcache`:   
 ```sh
 pip install graphcache
 ```
@@ -39,8 +39,8 @@ redis-server /usr/local/etc/redis.conf
 ```
 
 
-To use graphcache, you must first create an instance of GraphCache,
-and construct your nodes and edges:    
+To use graphcache,  
+first create an instance of GraphCache and construct your nodes and edges:    
 
 ```python
 # Import GraphCache
@@ -91,7 +91,7 @@ g.add_edge(n2, n1)
 ![graphcache](http://i.imgur.com/mbWiYet.png)
 
 
-Then you can perform filter/sort operations on any of the node to get the required adjacent nodes from that node:
+Now you can perform filter/sort operations on any of the node to get the required adjacent nodes from that node:
 
 ```python
 # Filter By
@@ -107,7 +107,7 @@ node1 = n1.get_incoming().sort_by('bananas').get_node_indexed_at(0)
 ```
 
 
-Also you can perform chained complex operations:
+Also you can perform chained operations:
 
 ```python
 # Filter By, Sort By
