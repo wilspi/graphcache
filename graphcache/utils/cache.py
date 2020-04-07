@@ -1,7 +1,8 @@
-import pylibmc
+# import pylibmc
 import string
 import random
-
+import redis
+import pickle
 
 class Cache:
     """
@@ -9,16 +10,20 @@ class Cache:
 
     """
 
-    # Global memcache client for this class
-    try:
-        cache = pylibmc.Client(
-            cache_servers, binary=True, behaviors={"tcp_nodelay": True, "ketama": True}
-        )
-    except Exception:
-        raise Exception("Cache Error: Failed to connect to server")
+    def __init__(self, host="localhost", port=6379, db=0):
+        # Redis client
+        try:
+            # cache = pylibmc.Client(
+            #     cache_servers, binary=True, behaviors={"tcp_nodelay": True, "ketama": True}
+            # )
+            self.host = host
+            self.port = port
+            self.db = db
+            self.cache = redis.StrictRedis(host=self.host, port=self.port, db=self.db)
+        except Exception:
+            raise Exception("Cache Error: Failed to connect to server")
 
-    @staticmethod
-    def get_random_key(size=6, chars=string.ascii_uppercase + string.digits):
+    def get_random_key(self, size=6, chars=string.ascii_uppercase + string.digits):
         """
         Get random key
 
@@ -34,8 +39,7 @@ class Cache:
 
         return "graphcache-" + ("".join(random.choice(chars) for _ in range(size)))
 
-    @staticmethod
-    def set(key, value, ttl=None):
+    def set(self, key, value, ttl=None):
         """
         Set key-value pair in cache
 
@@ -51,18 +55,17 @@ class Cache:
         """
 
         if ttl is None:
-            Cache.cache.set(key, value)
+            self.cache.set(key, pickle.dumps(value))
 
         elif ttl > 0:
-            Cache.cache.set(key, value, ttl)
+            self.cache.set(key, pickle.dumps(value), ex=ttl)
 
         else:
             raise Exception("Value Error: TTL must be positive")
 
         return key
 
-    @staticmethod
-    def get(key, silent=False):
+    def get(self, key, silent=False):
         """
         Get value by key from cache
 
@@ -78,7 +81,12 @@ class Cache:
         """
 
         try:
-            value = Cache.cache[key]
+            value_obj = self.cache.get(key)
+            if value_obj is None:
+                raise Exception("Value not found")
+            value = pickle.loads(value_obj)
+            if value.__class__.__name__ in  ("GraphCache", "Node", "NodeRef"):
+                value.cache = self
 
         except Exception:
             if silent:
@@ -87,8 +95,7 @@ class Cache:
 
         return value
 
-    @staticmethod
-    def remove(key):
+    def remove(self, key):
         """
         Remove key-value pair from cache
 
@@ -98,8 +105,15 @@ class Cache:
         """
 
         try:
-            Cache.get(key)
-            del Cache.cache[key]
+            # self.get(key)
+            self.cache.delete(key)
 
         except Exception:
             pass
+
+    def __getstate__(self):
+        return {"host": self.host, "port": self.port, "db": self.db}
+
+    def __setstate__(self, d):
+        self.__dict__ = d
+        self.__dict__["cache"] = redis.StrictRedis(host=d["host"], port=d["port"], db=d["db"])

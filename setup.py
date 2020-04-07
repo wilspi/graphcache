@@ -1,12 +1,11 @@
 from setuptools import setup, find_packages
-from os.path import expanduser
 
 setup(
     name="graphcache",
-    version="0.1.2",
+    version="0.1.3",
     description="Python library to store connected nodes and their properties on cache storage",
     long_description="Read http://github.com/wilspi/graphcache",
-    keywords="graphcache graph cache python node memcache",
+    keywords="graphcache graph cache python node redis",
     url="http://github.com/wilspi/graphcache",
     author="wilspi",
     author_email="the.wilspi@gmail.com",
@@ -25,8 +24,7 @@ setup(
         "Programming Language :: Python :: 3.4",
     ],
     packages=find_packages(exclude=["*.tests", "*.tests.*", "tests.*", "tests"]),
-    data_files=[(expanduser("~") + "/", ["config/graphcache_config.conf"])],
-    install_requires=["pylibmc"],
+    install_requires=["redis==3.4.1"],
     include_package_data=True,
     zip_safe=False,
 )

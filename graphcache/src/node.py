@@ -1,7 +1,5 @@
 from datetime import datetime
 import math
-
-from ..utils.cache import Cache
 from .node_ref_group import NodeRefGroup
 
 
@@ -25,7 +23,9 @@ class Node:
         time at which ttl is set
     """
 
-    def __init__(self, id, data=None, optimisation_keys=[], ttl=None, cache_sync=True):
+    def __init__(
+        self, cache, id, data=None, optimisation_keys=[], ttl=None, cache_sync=True
+    ):
         """
         Init method (constructor)
 
@@ -43,19 +43,21 @@ class Node:
             sync to cache, default true
         """
 
+        self.cache = cache
+        print(cache.host)
         if data is None:
             self.data = {}
         else:
             self.data = data
         self.data["graphcache_node_id"] = id
-        self.incoming_node_refs_list = NodeRefGroup(optimisation_keys)
-        self.outgoing_node_refs_list = NodeRefGroup(optimisation_keys)
+        self.incoming_node_refs_list = NodeRefGroup(self.cache, optimisation_keys)
+        self.outgoing_node_refs_list = NodeRefGroup(self.cache, optimisation_keys)
 
         if ttl or cache_sync:
             self.ttl_set_at = datetime.now()
             self.ttl = ttl
-            self.cache_key = Cache.get_random_key()
-            Cache.set(self.cache_key, self, self.ttl)
+            self.cache_key = self.cache.get_random_key()
+            self.cache.set(self.cache_key, self, self.ttl)
 
     def update_data(self, key, value, cache_sync=True):
         """
@@ -195,7 +197,7 @@ class Node:
 
         self.ttl = ttl
         self.ttl_set_at = datetime.now()
-        Cache.set(self.cache_key, self, self.ttl)
+        self.cache.set(self.cache_key, self, self.ttl)
 
     def get_ttl(self):
         """
@@ -231,7 +233,7 @@ class Node:
         """
 
         if self.cache_key and cache_sync:
-            Cache.set(self.cache_key, self, self.get_ttl())
+            self.cache.set(self.cache_key, self, self.get_ttl())
 
     def __refresh(self, cache_sync=True):
         """

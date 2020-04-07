@@ -1,6 +1,5 @@
 import numbers
 from bisect import bisect_right
-from ..utils.cache import Cache
 
 
 class NodeRefGroup:
@@ -15,7 +14,7 @@ class NodeRefGroup:
         temporary node reference list for storing operations output (for function chaining)
     """
 
-    def __init__(self, optimisation_keys):
+    def __init__(self, cache, optimisation_keys):
         """
         Init method (constructor)
 
@@ -25,6 +24,7 @@ class NodeRefGroup:
             list of all optimisation keys
         """
 
+        self.cache = cache
         self._ref_lists = {}
         for key in optimisation_keys:
             self._ref_lists[key] = []
@@ -251,7 +251,7 @@ class NodeRefGroup:
             self._temp_list = self._ref_lists[optimisation_keys[0]]
 
         # expired node ref keys still exist in _ref_lists
-        nodes = filter(None, map(lambda x: Cache.get(x, True), self._temp_list))
+        nodes = filter(None, map(lambda x: self.cache.get(x, True), self._temp_list))
         self._temp_list = None  # reset _temp_list
 
         return list(nodes)
@@ -279,7 +279,7 @@ class NodeRefGroup:
             self._temp_list = self._ref_lists[optimisation_keys[0]]
 
         if len(self._temp_list) > index:
-            node = Cache.get(self._temp_list[index])
+            node = self.cache.get(self._temp_list[index])
             self._temp_list = None  # reset _temp_list
 
             return node

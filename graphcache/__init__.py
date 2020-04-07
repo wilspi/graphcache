@@ -1,1 +1,1 @@
-from .src.graphcache import Grapheap
+from .src.graphcache import GraphCache

@@ -1,6 +1,6 @@
 # graphcache
 
-Python Library to store connected nodes and their properties on cache storage (memcache)
+Python Library to store connected nodes and their properties on cache storage (redis)
 
 
 Installation
@@ -11,30 +11,32 @@ To install `graphcache`, simply:
 pip install graphcache
 ```
 
-On macos:   
-Install `memcache` using `Homebrew`:
-```sh
-brew install memcached
-```
 
 
-Configuration
--------------
+Development
+-----------
 
-Update `memcache` configuration:   
-
-```sh
-sudo vim ~/graphcache_config.conf
-```
+* Install [`pyenv`](https://github.com/pyenv/pyenv#installation) and [`pyenv-virtualenv`](https://github.com/pyenv/pyenv-virtualenv#installation)
+* Run
+  ```
+  pyenv install 3.7.0 --skip-existing
+  pyenv virtualenv 3.7.0 graphcache
+  ```
+* Update requirements
+  ```
+  pip install -r requirements.txt
+  ```
+* Install [`Redis`](https://gist.github.com/tomysmile/1b8a321e7c58499ef9f9441b2faa0aa8)
 
 
 Basic Use
 ---------
 
-Run `memcached` service:    
+Run `redis` service:    
 
+On macos
 ```sh
-memcached -p 11211
+redis-server /usr/local/etc/redis.conf
 ```
 
 
@@ -45,8 +47,11 @@ and construct your nodes and edges:
 # Import GraphCache
 from graphcache import GraphCache
 
-graphcache
-g = Grapheap()
+# default 
+# host = localhost
+# port = 6379
+# db = 0
+g = GraphCache()
 
 # Add optimisation keys
 g.optimise_for('bananas')
@@ -84,7 +89,7 @@ g.add_edge(n3, n4)
 g.add_edge(n2, n1)
 ```
 
-![grapheap](http://i.imgur.com/mbWiYet.png)
+![graphcache](http://i.imgur.com/mbWiYet.png)
 
 
 Then you can perform filter/sort operations on any of the node to get the required adjacent nodes from that node:
@@ -113,16 +118,3 @@ nodes1 = n2.get_outgoing().filter_by('apples', 5, "lt").sort_by('bananas').get_a
 # Sort By, Filter By, Filter By
 nodes2 = n3.get_incoming().sort_by('bananas').filter_by('bananas', [1, 5], "in").filter_by('apples', [1]).get_all_nodes()
 ```
-
-Metrics 
--------
-
-* **Filter By (equal to):** 0.0065 seconds
-* **Filter By (less than):** 0.0065 seconds
-* **Filter By (greater than):** 0.0099 seconds
-* **Filter By (range):** 0.0115 seconds
-* **Sort By:** 0.0088 seconds
-* **Filter By, Filter By:** 0.0119 seconds
-* **Filter By, Sort By:** 0.0155 seconds
-
-*Operations are performed on the node which is connected to 100 nodes*

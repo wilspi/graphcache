@@ -23,41 +23,44 @@ class GraphCache:
     # Also used for 'graphcache_node_id' optimisation key for each node
     count_nodes = 0
 
-    def __init__(self, graphcache_ref=None):
+    def __init__(self, host="localhost", port=6379, db=0, graphcache_ref=None):
         """
         Init method (constructor)
 
         Parameters
         ----------
         graphcache_ref: string
-            reference to graphcache object to load any saved graphcache object, if any (optional)
+            reference to graphcache object to load saved graphcache object, if any (optional)
         cache_sync: bool
             sync to cache, default true
         """
+
+        self.cache = Cache(host=host, port=port, db=db)
 
         # Create new graphcache
         if graphcache_ref is None:
             # default optimisation key
             self.optimisation_keys = ["graphcache_node_id"]
             entry_node = Node(
-                graphcache.count_nodes,
+                self.cache,
+                GraphCache.count_nodes,
                 {"graphcache_node_type": "entry node"},
                 self.optimisation_keys,
             )  # todo: cache
             self.entry_node_ref = entry_node.cache_key
 
             # Set the object in Cache
-            self.cache_key = Cache.get_random_key()
-            Cache.set(self.cache_key, self)
+            self.cache_key = self.cache.get_random_key()
+            self.cache.set(self.cache_key, self)
 
         # Load existing from cache
         else:
-            graphcache = Cache.get(graphcache_ref)
+            graphcache = self.cache.get(graphcache_ref)
             self.optimisation_keys = graphcache.optimisation_keys
             self.entry_node_ref = graphcache.entry_node_ref
             self.cache_key = graphcache.cache_key
 
-        self.entry = Cache.get(self.entry_node_ref)
+        self.entry = self.cache.get(self.entry_node_ref)
 
     def get_node(self, node_ref):
         """
@@ -74,7 +77,7 @@ class GraphCache:
             Node class type object
         """
 
-        return Cache.get(node_ref)
+        return self.cache.get(node_ref)
 
     def add_vertex(self, data):
         """
@@ -93,8 +96,10 @@ class GraphCache:
         """
 
         if self.__validate_node_data(data):
-            graphcache.count_nodes += 1
-            node = Node(graphcache.count_nodes, data, self.optimisation_keys)
+            GraphCache.count_nodes += 1
+            node = Node(
+                self.cache, GraphCache.count_nodes, data, self.optimisation_keys
+            )
 
             return node
 
