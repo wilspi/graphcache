@@ -32,8 +32,7 @@ Development
 Basic Use
 ---------
 
-Run `redis` service:    
-
+Ensure you have `redis` service running    
 On macos
 ```sh
 redis-server /usr/local/etc/redis.conf
@@ -51,7 +50,7 @@ from graphcache import GraphCache
 # host = localhost
 # port = 6379
 # db = 0
-g = GraphCache()
+g = GraphCache(host='localhost', port=6379, db=0)
 
 # Add optimisation keys
 g.optimise_for('bananas')
@@ -117,4 +116,21 @@ nodes1 = n2.get_outgoing().filter_by('apples', 5, "lt").sort_by('bananas').get_a
 
 # Sort By, Filter By, Filter By
 nodes2 = n3.get_incoming().sort_by('bananas').filter_by('bananas', [1, 5], "in").filter_by('apples', [1]).get_all_nodes()
+```
+
+
+Get the key for the graphcache object
+```python
+g.cache_key
+# graphcache-MZ5SQR
+```
+
+
+Retrieve previously stored graphcache object from redis cache (cache_key = `graphcache-MZ5SQR`)
+```python
+# using default redis connection
+# host = localhost
+# port = 6379
+# db = 0
+g1 = GraphCache(graphcache_ref='graphcache-MZ5SQR')
 ```
