@@ -4,6 +4,7 @@ import random
 import redis
 import pickle
 
+
 class Cache:
     """
     Cache class
@@ -85,7 +86,7 @@ class Cache:
             if value_obj is None:
                 raise Exception("Value not found")
             value = pickle.loads(value_obj)
-            if value.__class__.__name__ in  ("GraphCache", "Node", "NodeRef"):
+            if value.__class__.__name__ in ("GraphCache", "Node", "NodeRef"):
                 value.cache = self
 
         except Exception:
@@ -116,4 +117,6 @@ class Cache:
 
     def __setstate__(self, d):
         self.__dict__ = d
-        self.__dict__["cache"] = redis.StrictRedis(host=d["host"], port=d["port"], db=d["db"])
+        self.__dict__["cache"] = redis.StrictRedis(
+            host=d["host"], port=d["port"], db=d["db"]
+        )
