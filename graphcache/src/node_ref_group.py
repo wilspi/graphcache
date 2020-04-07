@@ -141,7 +141,7 @@ class NodeRefGroup:
             ]
 
         # less than or equal to
-        if operator == "le":
+        elif operator == "le":
             assert isinstance(input1, numbers.Real), (
                 "Error: numerical value required, " + str(input1) + " given"
             )

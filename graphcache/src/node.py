@@ -44,7 +44,6 @@ class Node:
         """
 
         self.cache = cache
-        print(cache.host)
         if data is None:
             self.data = {}
         else:

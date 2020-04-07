@@ -1,4 +1,3 @@
-# import pylibmc
 import string
 import random
 import redis
@@ -14,9 +13,6 @@ class Cache:
     def __init__(self, host="localhost", port=6379, db=0):
         # Redis client
         try:
-            # cache = pylibmc.Client(
-            #     cache_servers, binary=True, behaviors={"tcp_nodelay": True, "ketama": True}
-            # )
             self.host = host
             self.port = port
             self.db = db
@@ -106,16 +102,21 @@ class Cache:
         """
 
         try:
-            # self.get(key)
             self.cache.delete(key)
 
         except Exception:
             pass
 
     def __getstate__(self):
+        """
+        Required for pickling, since can't pickle redis connection
+        """
         return {"host": self.host, "port": self.port, "db": self.db}
 
     def __setstate__(self, d):
+        """
+        Required for pickling, since can't pickle redis connection
+        """
         self.__dict__ = d
         self.__dict__["cache"] = redis.StrictRedis(
             host=d["host"], port=d["port"], db=d["db"]

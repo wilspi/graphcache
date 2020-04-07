@@ -162,7 +162,7 @@ class GraphCache:
         else:
             missing_keys = [x for x in self.optimisation_keys[1:] if x not in data]
             raise ValueError(
-                "graphcache Error: "
+                "GraphCache Error: "
                 + str(missing_keys)
                 + " optimisation keys missing in data"
             )
@@ -187,4 +187,4 @@ class GraphCache:
             to_traverse.extend(cur_node.get_outgoing().get_all_nodes())
 
     def __repr__(self):
-        return "<graphcache %r>" % self.cache_key
+        return "<GraphCache %r>" % self.cache_key
